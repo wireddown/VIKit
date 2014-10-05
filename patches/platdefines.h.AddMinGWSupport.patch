@@ -1,0 +1,20 @@
+--- platdefines.h	Mon Jul  1 20:13:54 2013
++++ platdefines.new.h	Sun Oct  5 16:15:39 2014
+@@ -112,6 +112,8 @@
+ 		#define Compiler		kSymanCWin
+ 	#elif defined(__BORLANDC__) || defined(__BCPLUSPLUS__) || defined(_NI_BC_)
+ 		#define Compiler		kBorlandC
++	#elif defined(__GNUC__)
++		#define Compiler		kGCC
+ 	#else
+ 		#error "We don't know the Compiler"
+ 	#endif
+@@ -127,6 +129,8 @@
+ 		#define ProcessorType	kX86
+ 	#elif defined(_ARM_)
+ 		#define ProcessorType 	kARM
++	#elif defined(__i386__)
++		#define ProcessorType	kX86
+ 	#else
+ 		#error "We don't know the ProcessorType architecture"
+ 	#endif

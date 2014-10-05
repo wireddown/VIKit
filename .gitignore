@@ -14,3 +14,6 @@
 # Metadata
 *.aliases
 *.lvlps
+
+# Objects
+builds/
