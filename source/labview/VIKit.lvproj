@@ -29,6 +29,7 @@
 				<Property Name="Bld_previewCacheID" Type="Str">{BF69993C-5FA0-41DC-B9D0-1506F6D15B4A}</Property>
 				<Property Name="Bld_userLogFile" Type="Path">/C/repos/VIKit/builds/VIKit_VIKit.dll_log.txt</Property>
 				<Property Name="Bld_version.major" Type="Int">1</Property>
+				<Property Name="Bld_version.patch" Type="Int">2</Property>
 				<Property Name="Destination[0].destName" Type="Str">VIKit.dll</Property>
 				<Property Name="Destination[0].path" Type="Path">/C/repos/NI_AB_PROJECTNAME/builds/VIKit.dll</Property>
 				<Property Name="Destination[0].path.type" Type="Str">&lt;none&gt;</Property>
@@ -43,7 +44,7 @@
 				<Property Name="Dll_headerGUID" Type="Str">{EF47F4DC-6753-4168-9839-77CFBFC548C2}</Property>
 				<Property Name="Dll_includeHeaders" Type="Bool">true</Property>
 				<Property Name="Dll_libGUID" Type="Str">{AE5A2F0D-76AB-4F3B-A689-23B730A04984}</Property>
-				<Property Name="Source[0].itemID" Type="Str">{F058C080-A949-43EE-83CD-742600A36124}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{30AA1E5F-E053-4E93-B561-6C459CEC3936}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].ExportedVI.VIProtoInfo[0]VIProtoDir" Type="Int">4</Property>
@@ -76,7 +77,7 @@
 				<Property Name="Source[1].ExportedVI.VIProtoInfo[3]VIProtoName" Type="Str">VIVersionLength</Property>
 				<Property Name="Source[1].ExportedVI.VIProtoInfo[3]VIProtoOutputIdx" Type="Int">-1</Property>
 				<Property Name="Source[1].ExportedVI.VIProtoInfo[3]VIProtoPassBy" Type="Int">1</Property>
-				<Property Name="Source[1].ExportedVI.VIProtoInfoCPTM" Type="Bin">%Q#!!!!!!!E!$%!B"H.U982V=Q!!#U!$!!2D&lt;W2F!!!11$$`````"H.P&gt;8*D:1!!&amp;E"1!!-!!!!"!!)*:8*S&lt;X)A&lt;X6U!!1!!!!51$$`````#F:*)&amp;:F=H.J&lt;WY!!#"!5!!$!!!!!1!#%W6S=G^S)'FO)#BO&lt;S"F=H*P=CE!%%!Q`````Q&gt;733"1982I!&amp;1!]!!-!!-!"!!%!!5!"!!%!!1!"!!'!!1!"!!(!Q!!?!!!$1A!!!!!!!!!!!!!#1!!!!!!!!!!!!!!!!!!!!!!!!!+!!!!!!!!!!!!!!))!!!!!!%!#!</Property>
+				<Property Name="Source[1].ExportedVI.VIProtoInfoCPTM" Type="Bin">%Q#!!!!!!!E!$%!B"H.U982V=Q!!#U!$!!2D&lt;W2F!!!11$$`````"H.P&gt;8*D:1!!&amp;E"1!!-!!!!"!!)*28*S&lt;X)A4X6U!!1!!!!11$$`````"V:F=H.J&lt;WY!&amp;E"1!!-!!!!"!!))28*S&lt;X)A37Y!!""!-0````](6EEA5'&amp;U;!"5!0!!$!!$!!1!"!!&amp;!!1!"!!%!!1!"A!%!!1!"Q-!!(A!!!E!!!!!!!!!!!!!!!E!!!!!!!!!!!!!!!!!!!!!!!!!#A!!!!!!!!!!!!!##!!!!!!"!!A</Property>
 				<Property Name="Source[1].ExportedVI.VIProtoInfoVIProtoItemCount" Type="Int">4</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/VIQueryVersion.vi</Property>
 				<Property Name="Source[1].sourceInclusion" Type="Str">TopLevel</Property>
