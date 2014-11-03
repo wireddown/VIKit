@@ -11,6 +11,8 @@
 		<Property Name="server.vi.callsEnabled" Type="Bool">true</Property>
 		<Property Name="server.vi.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="specify.custom.address" Type="Bool">false</Property>
+		<Item Name="VIProject.lvlib" Type="Library" URL="../VIProject/VIProject.lvlib"/>
+		<Item Name="VIQueryBuildSpecs.vi" Type="VI" URL="../VIQueryBuildSpecs.vi"/>
 		<Item Name="VIQueryVersion.vi" Type="VI" URL="../VIQueryVersion.vi"/>
 		<Item Name="Dependencies" Type="Dependencies"/>
 		<Item Name="Build Specifications" Type="Build">
@@ -29,7 +31,7 @@
 				<Property Name="Bld_previewCacheID" Type="Str">{BF69993C-5FA0-41DC-B9D0-1506F6D15B4A}</Property>
 				<Property Name="Bld_userLogFile" Type="Path">/C/repos/VIKit/builds/VIKit_VIKit.dll_log.txt</Property>
 				<Property Name="Bld_version.major" Type="Int">1</Property>
-				<Property Name="Bld_version.patch" Type="Int">2</Property>
+				<Property Name="Bld_version.patch" Type="Int">3</Property>
 				<Property Name="Destination[0].destName" Type="Str">VIKit.dll</Property>
 				<Property Name="Destination[0].path" Type="Path">/C/repos/NI_AB_PROJECTNAME/builds/VIKit.dll</Property>
 				<Property Name="Destination[0].path.type" Type="Str">&lt;none&gt;</Property>
@@ -44,7 +46,7 @@
 				<Property Name="Dll_headerGUID" Type="Str">{EF47F4DC-6753-4168-9839-77CFBFC548C2}</Property>
 				<Property Name="Dll_includeHeaders" Type="Bool">true</Property>
 				<Property Name="Dll_libGUID" Type="Str">{AE5A2F0D-76AB-4F3B-A689-23B730A04984}</Property>
-				<Property Name="Source[0].itemID" Type="Str">{30AA1E5F-E053-4E93-B561-6C459CEC3936}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{71CB2F8B-DD0C-4ED9-87EB-6EA138EBFFCE}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].ExportedVI.VIProtoInfo[0]VIProtoDir" Type="Int">4</Property>
@@ -82,7 +84,11 @@
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/VIQueryVersion.vi</Property>
 				<Property Name="Source[1].sourceInclusion" Type="Str">TopLevel</Property>
 				<Property Name="Source[1].type" Type="Str">ExportedVI</Property>
-				<Property Name="SourceCount" Type="Int">2</Property>
+				<Property Name="Source[2].destinationIndex" Type="Int">0</Property>
+				<Property Name="Source[2].itemID" Type="Ref">/My Computer/VIQueryBuildSpecs.vi</Property>
+				<Property Name="Source[2].sourceInclusion" Type="Str">TopLevel</Property>
+				<Property Name="Source[2].type" Type="Str">ExportedVI</Property>
+				<Property Name="SourceCount" Type="Int">3</Property>
 				<Property Name="TgtF_companyName" Type="Str">Joe Friedrichsen</Property>
 				<Property Name="TgtF_fileDescription" Type="Str">VIKit.dll</Property>
 				<Property Name="TgtF_internalName" Type="Str">VIKit.dll</Property>

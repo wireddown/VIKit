@@ -6,6 +6,7 @@ VIKIT_LIB_DIR := VIKit
 VIKIT_BIN_DIR := bin
 
 SOURCE_FILES := \
+   ../source/c/VIQueryBuildSpecs.c \
    ../source/c/VIQueryVersion.c \
    ../source/c/Makefile \
 
@@ -14,7 +15,6 @@ LABVIEW_FILES := \
    ../builds/fundtypes.h \
    ../builds/hosttype.h \
    ../builds/ILVDataInterface.h \
-   ../builds/ILVTypeInterface.h \
    ../builds/ILVTypeInterface.h \
    ../builds/lv_epilog.h \
    ../builds/lv_prolog.h \

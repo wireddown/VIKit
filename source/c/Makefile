@@ -1,19 +1,21 @@
 # Makefile for VIKit
 
 VIQueryVersion := VIQueryVersion
+VIQueryBuildSpecs := VIQueryBuildSpecs
 
 EXECUTABLE_FILES := \
    $(VIQueryVersion).exe \
+   $(VIQueryBuildSpecs).exe \
 
 SOURCE_FILES := \
    $(VIQueryVersion).c \
+   $(VIQueryBuildSpecs).c \
 
 LABVIEW_FILES := \
    VIKit/extcode.h \
    VIKit/fundtypes.h \
    VIKit/hosttype.h \
    VIKit/ILVDataInterface.h \
-   VIKit/ILVTypeInterface.h \
    VIKit/ILVTypeInterface.h \
    VIKit/lv_epilog.h \
    VIKit/lv_prolog.h \

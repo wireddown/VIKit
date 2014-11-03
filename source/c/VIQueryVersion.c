@@ -50,7 +50,7 @@ int32_t main(int32_t argc, const char* argv[])
 {
    if (argc < 2)
    {
-      printf("Usage: getVIVersion 'path/to/vi'");
+      printf("Usage: VIQueryVersion 'path/to/vi'");
       return UsageError;
    }
    else
@@ -69,7 +69,7 @@ int32_t main(int32_t argc, const char* argv[])
          }
          else
          {
-            printf("Could not find VI, or file was not a VI.");
+            printf("Could not find file, or file was not a LabVIEW file.");
          }
 
          free(viPathString);
