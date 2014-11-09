@@ -27,6 +27,21 @@ AddMinGWSupport := ../patches/platdefines.h.AddMinGWSupport.patch
 PATCH_FILES := \
    $(AddMinGWSupport) \
 
+RELEASE_NOTES := ReleaseNotes.md
+
+RELEASE_NOTES_FILES := \
+   ../documentation/ReleaseNotesTemplate.md \
+   ../documentation/UsageSynopsis.md \
+
+README := ../README.md
+
+README_FILES := \
+   ../documentation/ReadmeHeader.md \
+   ../documentation/UsageSynopsis.md \
+   ../documentation/GettingStarted.md \
+
+all : $(VIKIT_TARBALL) $(RELEASE_NOTES) $(README)
+
 $(VIKIT_TARBALL): $(SOURCE_FILES) $(LABVIEW_FILES) $(PATCH_FILES)
 	@mkdir -p $(VIKIT_STAGING_DIR)/$(VIKIT_LIB_DIR)
 	@cp $(SOURCE_FILES) $(VIKIT_STAGING_DIR)
@@ -38,7 +53,15 @@ $(VIKIT_TARBALL): $(SOURCE_FILES) $(LABVIEW_FILES) $(PATCH_FILES)
 	@mv $(VIKIT_STAGING_DIR)/*.dll $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	tar -czvf $(VIKIT_TARBALL) $(VIKIT_LIB_DIR)
 
-.PHONY: clean
+$(RELEASE_NOTES) : $(RELEASE_NOTES_FILES)
+	cat $^ > $@
+
+$(README) : $(README_FILES)
+	cat $^ > $@
+
+.PHONY: clean $(README)
 clean:
-	rm -rfv $(VIKIT_STAGING_DIR)
-	rm -rfv $(VIKIT_TARBALL)
+	@rm -rfv $(VIKIT_STAGING_DIR)
+	@rm -rfv $(VIKIT_TARBALL)
+	@rm -rfv $(RELEASE_NOTES)
+	git reset HEAD $(README) && git checkout -- $(README)
