@@ -11,5 +11,8 @@ $ tar -xzf VIKit.tar.gz
 $ cd VIKit
 $ make
 gcc -std=c99 VIQueryVersion.c -o VIQueryVersion.exe -lVIKit -LVIKit
-...
+.
+.
+.
 ```
+
