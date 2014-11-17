@@ -15,4 +15,8 @@ gcc -std=c99 VIQueryVersion.c -o VIQueryVersion.exe -lVIKit -LVIKit
 .
 .
 ```
+* Install the tools:
+```
+$  make install DEST='/path/to/your/bin'
+```
 

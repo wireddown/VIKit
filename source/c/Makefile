@@ -32,6 +32,9 @@ all: $(EXECUTABLE_FILES) $(SOURCE_FILES) $(LABVIEW_FILES)
 %.exe : %.c
 	gcc $(CC_FLAGS) $< -o $@ $(LINK_VIKIT_FLAGS)
 
+install: $(EXECUTABLE_FILES) VIKit.dll
+	@cp $^ "$(DEST)"
+
 .PHONY: clean
 clean:
 	rm -rfv *.exe
