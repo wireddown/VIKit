@@ -19,3 +19,6 @@
 builds/
 *.buildCookie
 *.tar.gz
+packager/*.md
+packager/*.ini
+packager/VIKit

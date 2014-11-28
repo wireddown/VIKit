@@ -4,54 +4,43 @@ VIBuildProject := VIBuildProject
 VIQueryVersion := VIQueryVersion
 VIQueryBuildSpecs := VIQueryBuildSpecs
 
+BINARY_DIR := bin
 VIPROJECT_DIR := VIProject
+
+VIKIT_DLL := VIKit.dll
 
 COMPILED_EXECUTABLE_FILES := \
    $(VIQueryVersion).exe \
    $(VIQueryBuildSpecs).exe \
 
-SOURCE_FILES := \
-   $(VIQueryVersion).c \
-   $(VIQueryBuildSpecs).c \
-
-LABVIEW_FILES := \
-   VIKit/extcode.h \
-   VIKit/fundtypes.h \
-   VIKit/hosttype.h \
-   VIKit/ILVDataInterface.h \
-   VIKit/ILVTypeInterface.h \
-   VIKit/lv_epilog.h \
-   VIKit/lv_prolog.h \
-   VIKit/platdefines.h \
-   VIKit/VIKit.dll \
-   VIKit/VIKit.h \
+SETTINGS_FILES := \
+   $(BINARY_DIR)/$(VIQueryBuildSpecs).ini \
 
 EXECUTABLE_FILES := \
-   bin/VIHost.lvlib \
-   bin/VHRunVI.vi \
-   bin/VIQueryBuildSpecs.vi \
-   bin/$(VIBuildProject).sh \
-   bin/$(VIBuildProject).vi \
+   $(BINARY_DIR)/VIHost.lvlib \
+   $(BINARY_DIR)/VHRunVI.vi \
+   $(BINARY_DIR)/VIQueryBuildSpecs.vi \
+   $(BINARY_DIR)/$(VIBuildProject).sh \
+   $(BINARY_DIR)/$(VIBuildProject).vi \
 
 CALLABLE_VIPROJECT_FILES := \
-   bin/$(VIPROJECT_DIR)/VIProject.lvlib \
-   bin/$(VIPROJECT_DIR)/VPBuildSpecInformation.ctl \
-   bin/$(VIPROJECT_DIR)/VPCutProjectDependencies.vi \
-   bin/$(VIPROJECT_DIR)/VPRebuild.vi \
-   bin/$(VIPROJECT_DIR)/VPTargetBuildSpecs.ctl \
-
+   $(BINARY_DIR)/$(VIPROJECT_DIR)/VIProject.lvlib \
+   $(BINARY_DIR)/$(VIPROJECT_DIR)/VPBuildSpecInformation.ctl \
+   $(BINARY_DIR)/$(VIPROJECT_DIR)/VPRebuild.vi \
+   $(BINARY_DIR)/$(VIPROJECT_DIR)/VPTargetBuildSpecs.ctl \
 
 CC_FLAGS := -std=c99
 LINK_VIKIT_FLAGS := -lVIKit -LVIKit
 
-all: $(COMPILED_EXECUTABLE_FILES) $(SOURCE_FILES) $(LABVIEW_FILES)
-	@cp VIKit/VIKit.dll .
+all: $(COMPILED_EXECUTABLE_FILES)
+	@cp VIKit/$(VIKIT_DLL) .
 
 %.exe : %.c
 	gcc $(CC_FLAGS) $< -o $@ $(LINK_VIKIT_FLAGS)
 
-install: $(COMPILED_EXECUTABLE_FILES) $(EXECUTABLE_FILES) $(CALLABLE_VIPROJECT_FILES) VIKit.dll
-	@cp $(COMPILED_EXECUTABLE_FILES) $(EXECUTABLE_FILES) VIKit.dll "$(DEST)"
+install: $(COMPILED_EXECUTABLE_FILES) $(SETTINGS_FILES) $(EXECUTABLE_FILES) $(VIKIT_DLL) $(CALLABLE_VIPROJECT_FILES)
+	@ls "$(DEST)" >/dev/null
+	@cp $(COMPILED_EXECUTABLE_FILES) $(SETTINGS_FILES) $(EXECUTABLE_FILES) $(VIKIT_DLL) "$(DEST)"
 	@mkdir -p "$(DEST)/$(VIPROJECT_DIR)"
 	@cp $(CALLABLE_VIPROJECT_FILES) "$(DEST)/$(VIPROJECT_DIR)"
 

@@ -1,5 +1,7 @@
 # Makefile for VIKit distribution
 
+LABVIEW_RTE_VERSION := 2013
+
 VIKIT_TARBALL := VIKit.tar.gz
 VIKIT_STAGING_DIR := VIKit
 VIKIT_LIB_DIR := VIKit
@@ -15,7 +17,6 @@ LABVIEW_SOURCE_FILES := \
 CALLABLE_VIPROJECT_FILES := \
    ../source/labview/$(VIPROJECT_DIR)/VIProject.lvlib \
    ../source/labview/$(VIPROJECT_DIR)/VPBuildSpecInformation.ctl \
-   ../source/labview/$(VIPROJECT_DIR)/VPCutProjectDependencies.vi \
    ../source/labview/$(VIPROJECT_DIR)/VPRebuild.vi \
    ../source/labview/$(VIPROJECT_DIR)/VPTargetBuildSpecs.ctl \
 
@@ -24,6 +25,11 @@ CALLABLE_LABVIEW_FILES := \
    ../source/labview/VIHost/VIHost.lvlib \
    ../source/labview/VIHost/VHRunVI.vi \
    ../source/labview/VIQueryBuildSpecs.vi \
+
+VIQueryBuildSpecsSettings := VIQueryBuildSpecs.ini
+
+LABVIEW_INI_FILES := \
+   $(VIQueryBuildSpecsSettings)
 
 SCRIPT_SOURCE_FILES := \
    $(shell find ../source/bash -type f)
@@ -66,11 +72,11 @@ README_FILES := \
    ../documentation/GettingStarted.md \
    ../documentation/Requirements.md \
 
-all : $(VIKIT_TARBALL) $(VIKIT_BINARY) $(RELEASE_NOTES) $(README)
+all : $(VIKIT_TARBALL) $(VIKIT_BINARY) $(LABVIEW_INI_FILES) $(RELEASE_NOTES) $(README)
 
-$(VIKIT_TARBALL): $(SOURCE_FILES) $(VIKIT_BINARY) $(LABVIEW_BUILT_FILES) $(PATCH_FILES) $(SCRIPT_SOURCE_FILES) $(CALLABLE_LABVIEW_FILES) $(CALLABLE_VIPROJECT_FILES)
-	@rm -rfv $(VIKIT_STAGING_DIR)
-	@rm -rfv $(VIKIT_TARBALL)
+$(VIKIT_TARBALL): $(SOURCE_FILES) $(VIKIT_BINARY) $(LABVIEW_INI_FILES) $(LABVIEW_BUILT_FILES) $(PATCH_FILES) $(SCRIPT_SOURCE_FILES) $(CALLABLE_LABVIEW_FILES) $(CALLABLE_VIPROJECT_FILES)
+	@rm -rf $(VIKIT_STAGING_DIR)
+	@rm -rf $(VIKIT_TARBALL)
 	@mkdir -p $(VIKIT_STAGING_DIR)/$(VIKIT_LIB_DIR)
 	@cp $(SOURCE_FILES) $(VIKIT_STAGING_DIR)
 	@cp $(LABVIEW_BUILT_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_LIB_DIR)
@@ -80,14 +86,26 @@ $(VIKIT_TARBALL): $(SOURCE_FILES) $(VIKIT_BINARY) $(LABVIEW_BUILT_FILES) $(PATCH
 	@mkdir -p $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)/$(VIPROJECT_DIR)
 	@mv $(VIKIT_STAGING_DIR)/*.exe $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@mv $(VIKIT_STAGING_DIR)/*.dll $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
+	@cp $(LABVIEW_INI_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@cp $(SCRIPT_SOURCE_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@cp $(CALLABLE_LABVIEW_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@cp $(CALLABLE_VIPROJECT_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)/$(VIPROJECT_DIR)
 	tar -czvf $(VIKIT_TARBALL) $(VIKIT_LIB_DIR)
 
 $(VIKIT_BINARY) : $(VIKIT_PROJECT) $(LABVIEW_SOURCE_FILES)
-	@VIBuildProject.sh --project $(abspath $<)
+	@VIBuildProject.sh --project $(abspath $<) --lv-version $(LABVIEW_RTE_VERSION)
 	@ls ../builds/VIKit.dll >/dev/null && touch $@
+
+ifeq ($(PROGRAMFILES),)
+   LABVIEW_PATH := $(PROGRAMFILES) (x86)\National Instruments\LabVIEW $(LABVIEW_RTE_VERSION)
+else
+   LABVIEW_PATH := $(PROGRAMFILES)\National Instruments\LabVIEW $(LABVIEW_RTE_VERSION)
+endif
+
+SAFE_LABVIEW_PATH := $(subst \,\\\\,$(LABVIEW_PATH))
+
+$(VIQueryBuildSpecsSettings) :
+	@echo libdir=\"$(SAFE_LABVIEW_PATH)\" > $@
 
 $(RELEASE_NOTES) : $(RELEASE_NOTES_FILES)
 	cat $^ > $@
@@ -101,5 +119,6 @@ clean:
 	@rm -rfv $(VIKIT_TARBALL)
 	@rm -rfv $(VIKIT_BINARY)
 	@rm -rfv $(LABVIEW_BUILD_DIR)
+	@rm -rfv $(LABVIEW_INI_FILES)
 	@rm -rfv $(RELEASE_NOTES)
 	git reset HEAD $(README) && git checkout -- $(README)
