@@ -8,9 +8,9 @@ Tools for VIs
 
 >```
 $ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj'
-
-$ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj' --target "VIKit.dll@My Computer"
-
+>
+$ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj' --target 'VIKit.dll@My Computer'
+>
 $ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj' --lv-version 2014
 ```
 
@@ -26,7 +26,7 @@ My Computer     VIKit.dll       DLL
 >```
 $ VIQueryVersion.exe 'C:\path\to\VIQueryVersion.vi'
 13.0
-
+>
 $ VIQueryVersion.exe 'C:\path\to\VIKit.lvproj'
 13.0
 ```
@@ -58,4 +58,5 @@ Requirements
 
 * Windows XP or later
 * [LabVIEW 2013 Run-Time Engine](http://www.ni.com/download/labview-run-time-engine-2013-sp1/4539/en/)
+* `VIBuildProject.sh` requires a LabVIEW IDE with [Application Builder](http://sine.ni.com/nips/cds/view/p/lang/en/nid/210593)
 

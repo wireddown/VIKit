@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Copyright 2014 Joe Friedrichsen
+# Licensed under the Apache License, Version 2.0
+
 set -e
 
 # sed RegEx to replace / with \ in a path
@@ -21,6 +25,15 @@ function ToWindowsPath
 function ToBashPath
 {
    echo "$1" | sed -e "${ToBashRoot}" | sed -e "${ToBashSeparators}"
+}
+
+function PrintUsage
+{
+   echo >&2 "Usage:"
+   echo >&2 "  VIBuildProject.sh --project 'c:\path\to\project.lvproj' [--target 'SpecName@TargetName'] [--lv-version VersionYear]"
+   echo >&2
+   echo >&2 "To find buildable targets for the --target option, use \"VIQueryBuildSpecs c:\path\to\project.lvproj\""
+   echo >&2
 }
 
 function ExitWithError
@@ -184,6 +197,7 @@ while test $# -gt 1; do
 done
 
 if test -z "${ProjectPath}"; then
+   PrintUsage
    ExitWithError "argument '--project c:\path\to\project.lvproj' is required."
 fi
 

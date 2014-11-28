@@ -5,9 +5,9 @@ Tools for VIs
 
 >```
 $ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj'
-
-$ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj' --target "VIKit.dll@My Computer"
-
+>
+$ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj' --target 'VIKit.dll@My Computer'
+>
 $ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj' --lv-version 2014
 ```
 
@@ -23,7 +23,7 @@ My Computer     VIKit.dll       DLL
 >```
 $ VIQueryVersion.exe 'C:\path\to\VIQueryVersion.vi'
 13.0
-
+>
 $ VIQueryVersion.exe 'C:\path\to\VIKit.lvproj'
 13.0
 ```
