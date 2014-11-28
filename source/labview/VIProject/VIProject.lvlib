@@ -11,5 +11,6 @@
 </Property>
 	<Item Name="VPBuildSpecInformation.ctl" Type="VI" URL="../VPBuildSpecInformation.ctl"/>
 	<Item Name="VPCutProjectDependencies.vi" Type="VI" URL="../VPCutProjectDependencies.vi"/>
+	<Item Name="VPRebuild.vi" Type="VI" URL="../VPRebuild.vi"/>
 	<Item Name="VPTargetBuildSpecs.ctl" Type="VI" URL="../VPTargetBuildSpecs.ctl"/>
 </Library>

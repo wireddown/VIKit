@@ -1,14 +1,18 @@
 VIKit
 =====
 
-Requirements
-------------
-
-* Windows XP or later
-* LabVIEW 2013 Run-Time Engine
-
 Tools for VIs
 -------------
+
+* **VIBuildProject** -- command line tool that builds a LabVIEW project.
+
+>```
+$ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj'
+
+$ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj' --target "VIKit.dll@My Computer"
+
+$ VIBuildProject.sh --project 'C:\path\to\VIKit.lvproj' --lv-version 2014
+```
 
 * **VIQueryBuildSpecs** -- command line tool that prints all of the build specifications in a LabVIEW project.
 
@@ -22,6 +26,7 @@ My Computer     VIKit.dll       DLL
 >```
 $ VIQueryVersion.exe 'C:\path\to\VIQueryVersion.vi'
 13.0
+
 $ VIQueryVersion.exe 'C:\path\to\VIKit.lvproj'
 13.0
 ```
@@ -47,4 +52,10 @@ gcc -std=c99 VIQueryVersion.c -o VIQueryVersion.exe -lVIKit -LVIKit
 ```
 $  make install DEST='/path/to/your/bin'
 ```
+
+Requirements
+------------
+
+* Windows XP or later
+* [LabVIEW 2013 Run-Time Engine](http://www.ni.com/download/labview-run-time-engine-2013-sp1/4539/en/)
 

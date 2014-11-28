@@ -2,8 +2,9 @@
  * Licensed under the Apache License, Version 2.0
  */
 
-#include <stdlib.h>
+#include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "VIKit/VIKit.h"
@@ -16,12 +17,17 @@ const int32_t BufferStringLength = 127;
 const int32_t LVRunTimeLoadErrorMessageLength = 1023;
 const int32_t VIBuildSpecArrayLength = 1;
 
+char* createStringWithLength(int32_t length);
+void resetStringWithLength(char* string, int32_t length);
+char* duplicateString(const char* oldString);
+
 LStrHandle createStringHandleWithLength(int32_t length);
 void printStringHandle(LStrHandle stringHandle, const char* name, int32_t includeDebugInformation);
-char* createStringWithLength(int32_t length);
-char* duplicateString(const char* oldString);
-void copyLVString(char* destination, LStrHandle source);
+void copyLVString(char* destination, int32_t destinationLength, LStrHandle source);
 int32_t loadLabVIEWRunTime();
+
+void printError(const char* format, ...)
+     __attribute__ ((format (printf, 1, 2)));
 void printUsage();
 void printBuildSpecs(VIProject_VPTargetBuildSpecsArray targets);
 
@@ -47,8 +53,8 @@ int32_t main(int32_t argc, const char* argv[])
          }
          else
          {
-            printf("Error analyzing '%s':\n", viPathString);
-            printf("  Could not find file, or file was not a project file (error code %i).", errorCode);
+            printError("Error analyzing '%s':\n", viPathString);
+            printError("  Could not find file, or file was not a project file (error code %i).", errorCode);
          }
 
          free(viPathString);
@@ -66,7 +72,7 @@ LStrHandle createStringHandleWithLength(int32_t length)
 {
    LStrPtr stringPointer = (LStrPtr)malloc(sizeof(int32) + length * sizeof(uChar));
    stringPointer->cnt = length;
-   memset(stringPointer->str, 0, length);
+   resetStringWithLength(stringPointer->str, length - 1); // reset speaks in terms of C strings (0x0 term), not LV/Pascal strings
 
    LStrHandle stringHandle = (LStrHandle)malloc(sizeof(LStrHandle));
    *stringHandle = stringPointer;
@@ -86,7 +92,7 @@ void printStringHandle(LStrHandle stringHandle, const char* name, int32_t includ
    }
 
    char* stringBuffer = createStringWithLength(stringLength);
-   copyLVString(stringBuffer, stringHandle);
+   copyLVString(stringBuffer, stringLength, stringHandle);
    printf("%s\n", stringBuffer);
    free(stringBuffer);
    stringBuffer = NULL;
@@ -94,11 +100,17 @@ void printStringHandle(LStrHandle stringHandle, const char* name, int32_t includ
 
 char* createStringWithLength(int32_t length)
 {
-   const char null = 0;
    int stringLengthWithTerminator = length + 1;
    char* newString = malloc(stringLengthWithTerminator);
-   memset(newString, null, stringLengthWithTerminator);
+   resetStringWithLength(newString, length);
    return newString;
+}
+
+void resetStringWithLength(char* string, int32_t length)
+{
+   const char null = 0;
+   int stringLengthWithTerminator = length + 1;
+   memset(string, null, stringLengthWithTerminator);
 }
 
 char* duplicateString(const char* oldString)
@@ -109,9 +121,11 @@ char* duplicateString(const char* oldString)
    return newString;
 }
 
-void copyLVString(char* destination, LStrHandle source)
+void copyLVString(char* destination, int32_t destinationLength, LStrHandle source)
 {
-   strncpy(destination, LHStrBuf(source), LHStrLen(source));
+   int32_t maximumLength = destinationLength < LHStrLen(source) ? destinationLength : LHStrLen(source);
+   resetStringWithLength(destination, destinationLength);
+   strncpy(destination, LHStrBuf(source), maximumLength);
 }
 
 int32_t loadLabVIEWRunTime()
@@ -125,25 +139,33 @@ int32_t loadLabVIEWRunTime()
    }
    else
    {
-      printf(errorMessage);
+      printError(errorMessage);
    }
 
    free(errorMessage);
    return loadErrorCode;
 }
 
+void printError(const char* format, ...)
+{
+   va_list ap;
+   va_start(ap, format);
+   vfprintf(stderr, format, ap);
+   va_end(ap);
+}
+
 void printUsage()
 {
-   printf("Usage: VIQueryBuildSpecs 'path/to/project.lvproj'\n");
-   printf("\n");
-   printf("Output format is a line of tab-separated fields, one line for each specification:\n");
-   printf("\n");
-   printf("My Computer\tDAQ Monitor\tEXE\n");
-   printf("\n");
-   printf("Where the fields are\n");
-   printf("  1 LabVIEW target\n");
-   printf("  2 Build spec name\n");
-   printf("  3 Build spec type\n");
+   printError("Usage: VIQueryBuildSpecs 'path/to/project.lvproj'\n");
+   printError("\n");
+   printError("Output format is a line of tab-separated fields, one line for each specification:\n");
+   printError("\n");
+   printError("My Computer\tDAQ Monitor\tEXE\n");
+   printError("\n");
+   printError("Where the fields are\n");
+   printError("  1 LabVIEW target\n");
+   printError("  2 Build spec name\n");
+   printError("  3 Build spec type\n");
 }
 
 void printBuildSpecs(VIProject_VPTargetBuildSpecsArray targets)
@@ -157,14 +179,14 @@ void printBuildSpecs(VIProject_VPTargetBuildSpecsArray targets)
    {
       VIProject_VPTargetBuildSpecs buildSpecsForTarget = (*targets)->BuildSpecification[targetIndex];
       VIProject_VPBuildSpecInformationArray buildSpecs = buildSpecsForTarget.BuildSpecifications;
-      copyLVString(targetNameBuffer, buildSpecsForTarget.TargetName);
+      copyLVString(targetNameBuffer, BufferStringLength, buildSpecsForTarget.TargetName);
 
       int buildSpecCount = (*buildSpecs)->dimSize;
       for (int buildSpecIndex = 0; buildSpecIndex < buildSpecCount; ++buildSpecIndex)
       {
          VIProject_VPBuildSpecInformation buildSpec = (*buildSpecs)->BuildSpecificationInformation[buildSpecIndex];
-         copyLVString(buildSpecNameBuffer, buildSpec.Name);
-         copyLVString(buildSpecTypeBuffer, buildSpec.Type);
+         copyLVString(buildSpecNameBuffer, BufferStringLength, buildSpec.Name);
+         copyLVString(buildSpecTypeBuffer, BufferStringLength, buildSpec.Type);
 
          printf("%s\t%s\t%s\n", targetNameBuffer, buildSpecNameBuffer, buildSpecTypeBuffer);
       }

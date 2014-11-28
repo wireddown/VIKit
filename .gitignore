@@ -17,3 +17,5 @@
 
 # Objects
 builds/
+*.buildCookie
+*.tar.gz
