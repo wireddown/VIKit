@@ -7,6 +7,9 @@ VIKIT_STAGING_DIR := VIKit
 VIKIT_LIB_DIR := VIKit
 VIKIT_BIN_DIR := bin
 VIPROJECT_DIR := VIProject
+VIVENDOR_DIR := VIVendor
+VISNIPPET_DIR := $(VIVENDOR_DIR)/PngSnippet
+VISNIPPET_SUPPORT_DIR := $(VISNIPPET_DIR)/PSSupport
 
 SOURCE_FILES := \
    $(shell find ../source/c -type f)
@@ -14,17 +17,31 @@ SOURCE_FILES := \
 LABVIEW_SOURCE_FILES := \
    $(shell find ../source/labview -type f)
 
+CALLABLE_LABVIEW_FILES := \
+   ../source/labview/VIBuildProject.vi \
+   ../source/labview/VIHost/VIHost.lvlib \
+   ../source/labview/VIHost/VHRunVI.vi \
+   ../source/labview/VISnipDiagram.vi \
+   ../source/labview/VIQueryBuildSpecs.vi \
+
 CALLABLE_VIPROJECT_FILES := \
    ../source/labview/$(VIPROJECT_DIR)/VIProject.lvlib \
    ../source/labview/$(VIPROJECT_DIR)/VPBuildSpecInformation.ctl \
    ../source/labview/$(VIPROJECT_DIR)/VPRebuild.vi \
    ../source/labview/$(VIPROJECT_DIR)/VPTargetBuildSpecs.ctl \
 
-CALLABLE_LABVIEW_FILES := \
-   ../source/labview/VIBuildProject.vi \
-   ../source/labview/VIHost/VIHost.lvlib \
-   ../source/labview/VIHost/VHRunVI.vi \
-   ../source/labview/VIQueryBuildSpecs.vi \
+CALLABLE_VIVENDOR_FILES := \
+   ../source/labview/$(VIVENDOR_DIR)/VIVendor.lvlib \
+   
+CALLABLE_VISNIPPET_FILES := \
+   ../source/labview/$(VISNIPPET_DIR)/VVPngSnippet.lvlib \
+   ../source/labview/$(VISNIPPET_DIR)/PSCreateSnippet.vi \
+
+CALLABLE_VISNIPPET_SUPPORT_FILES := \
+   ../source/labview/$(VISNIPPET_SUPPORT_DIR)/PSCalculatePngChecksum.vi \
+   ../source/labview/$(VISNIPPET_SUPPORT_DIR)/PSCreatePngChunk.vi \
+   ../source/labview/$(VISNIPPET_SUPPORT_DIR)/PSCreatePngTextChunk.vi \
+   ../source/labview/$(VISNIPPET_SUPPORT_DIR)/PSGetPngChunks.vi \
 
 VIQueryBuildSpecsSettings := VIQueryBuildSpecs.ini
 
@@ -74,7 +91,7 @@ README_FILES := \
 
 all : $(VIKIT_TARBALL) $(VIKIT_BINARY) $(LABVIEW_INI_FILES) $(RELEASE_NOTES) $(README)
 
-$(VIKIT_TARBALL): $(SOURCE_FILES) $(VIKIT_BINARY) $(LABVIEW_INI_FILES) $(LABVIEW_BUILT_FILES) $(PATCH_FILES) $(SCRIPT_SOURCE_FILES) $(CALLABLE_LABVIEW_FILES) $(CALLABLE_VIPROJECT_FILES)
+$(VIKIT_TARBALL): $(SOURCE_FILES) $(VIKIT_BINARY) $(LABVIEW_INI_FILES) $(LABVIEW_BUILT_FILES) $(PATCH_FILES) $(SCRIPT_SOURCE_FILES) $(CALLABLE_LABVIEW_FILES) $(CALLABLE_VIPROJECT_FILES) $(CALLABLE_VISNIPPET_FILES) $(CALLABLE_VISNIPPET_SUPPORT_FILES)
 	@rm -rf $(VIKIT_STAGING_DIR)
 	@rm -rf $(VIKIT_TARBALL)
 	@mkdir -p $(VIKIT_STAGING_DIR)/$(VIKIT_LIB_DIR)
@@ -84,12 +101,16 @@ $(VIKIT_TARBALL): $(SOURCE_FILES) $(VIKIT_BINARY) $(LABVIEW_INI_FILES) $(LABVIEW
 	@cd $(VIKIT_STAGING_DIR) && make
 	@mkdir -p $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@mkdir -p $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)/$(VIPROJECT_DIR)
+	@mkdir -p $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)/$(VISNIPPET_SUPPORT_DIR)
 	@mv $(VIKIT_STAGING_DIR)/*.exe $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@mv $(VIKIT_STAGING_DIR)/*.dll $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@cp $(LABVIEW_INI_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@cp $(SCRIPT_SOURCE_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@cp $(CALLABLE_LABVIEW_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)
 	@cp $(CALLABLE_VIPROJECT_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)/$(VIPROJECT_DIR)
+	@cp $(CALLABLE_VIVENDOR_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)/$(VIVENDOR_DIR)
+	@cp $(CALLABLE_VISNIPPET_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)/$(VISNIPPET_DIR)
+	@cp $(CALLABLE_VISNIPPET_SUPPORT_FILES) $(VIKIT_STAGING_DIR)/$(VIKIT_BIN_DIR)/$(VISNIPPET_SUPPORT_DIR)
 	tar -czvf $(VIKIT_TARBALL) $(VIKIT_LIB_DIR)
 
 $(VIKIT_BINARY) : $(VIKIT_PROJECT) $(LABVIEW_SOURCE_FILES)

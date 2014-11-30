@@ -28,3 +28,11 @@ $ VIQueryVersion.exe 'C:\path\to\VIKit.lvproj'
 13.0
 ```
 
+* **VISnipDiagram** -- command line tool that creates a VI snippet of a VI's block diagram.
+
+>```
+$ VISnipDiagram.sh --vi 'C:\path\to\VIQueryVersion.vi' --png 'C:\path\to\VIQueryVersion.png'
+>
+$ VISnipDiagram.sh --vi 'C:\path\to\VIQueryVersion.vi' --png 'C:\path\to\VIQueryVersion.png' --lv-version 2014
+```
+
