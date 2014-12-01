@@ -1,4 +1,4 @@
-# Makefile for VIKit
+# Makefile for VIKit C executables
 
 VIBuildProject := VIBuildProject
 VIQueryVersion := VIQueryVersion
