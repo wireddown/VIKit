@@ -1,6 +1,6 @@
 # Makefile for VIKit C executables
 
-include files.mak
+include c-files.mak
 
 CC_FLAGS := -std=c99
 LINK_VIKIT_FLAGS := -lVIKit -LVIKit

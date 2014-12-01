@@ -1,6 +1,6 @@
 # Makefile for VIKit bash scripts
 
-include files.mak
+include sh-files.mak
 
 all : $(BUILT_SCRIPTS)
 
