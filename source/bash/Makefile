@@ -1,6 +1,18 @@
-# Makefile for VIKit bash scripts
+# Makefile data for VIKit bash scripts
 
-include sh-files.mak
+SHH_BANG_LINE := 2
+SHARED_FUNCTIONS_START_LINE := 7
+SCRIPT_HEADER_LINE := 4
+
+VISharedFunctions := VISharedFunctions
+VIBuildProject := VIBuildProject
+VISnipDiagram := VISnipDiagram
+
+BUILT_SCRIPTS := \
+   $(VIBuildProject).sh \
+   $(VISnipDiagram).sh \
+
+# Makefile rules for VIKit bash scripts
 
 all : $(BUILT_SCRIPTS)
 
@@ -11,5 +23,8 @@ all : $(BUILT_SCRIPTS)
 	@tail -n+$(SHARED_FUNCTIONS_START_LINE) $(VISharedFunctions).sh >> $@
 	@tail -n+$(SCRIPT_HEADER_LINE) $< >> $@
 
-clean :
-	@rm -rfv $(BUILT_SCRIPTS)
+clean : clean-sh
+
+clean-sh :
+	rm -rf $(BUILT_SCRIPTS)
+
