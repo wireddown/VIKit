@@ -27,15 +27,6 @@ function ToBashPath
    echo "$1" | sed -e "${ToBashRoot}" | sed -e "${ToBashSeparators}"
 }
 
-function PrintUsage
-{
-   echo >&2 "Usage:"
-   echo >&2 "  VIBuildProject.sh --project 'c:\path\to\project.lvproj' [--target 'SpecName@TargetName'] [--lv-version VersionYear]"
-   echo >&2
-   echo >&2 "To find buildable targets for the --target option, use \"VIQueryBuildSpecs c:\path\to\project.lvproj\""
-   echo >&2
-}
-
 function ExitWithError
 {
    echo >&2 "ERROR: $1"
@@ -103,6 +94,7 @@ function DetectLabviewVersion
    fi
 }
 
+# Return the path to a VI named $1 by searching the system's PATH
 function FindRunnableVI
 {
    local Runnable
@@ -124,6 +116,29 @@ function FindRunnableVI
    fi
    
    echo $(ToWindowsPath ${RunnablePath})
+}
+
+function CallLabview
+{
+   local LabviewPath
+   local RunnerPath
+
+   LabviewPath="$1"
+   RunnerPath="$2"
+   shift
+   shift
+
+   echo "${LabviewPath}" "${RunnerPath}" -- $@
+   "${LabviewPath}" "${RunnerPath}" -- $@
+}
+
+function PrintUsage
+{
+   echo >&2 "Usage:"
+   echo >&2 "  VIBuildProject.sh --project 'c:\path\to\project.lvproj' [--target 'SpecName@TargetName'] [--lv-version VersionYear]"
+   echo >&2
+   echo >&2 "To find buildable targets for the --target option, use \"VIQueryBuildSpecs c:\path\to\project.lvproj\""
+   echo >&2
 }
 
 function ValidateTargetWithSpec
@@ -151,20 +166,6 @@ function ValidateTargetWithSpec
    fi
 }
 
-function BuildProject
-{
-   local LabviewPath
-   local RunnerPath
-
-   LabviewPath="$1"
-   RunnerPath="$2"
-   shift
-   shift
-
-   echo "${LabviewPath}" "${RunnerPath}" -- $@
-   "${LabviewPath}" "${RunnerPath}" -- $@
-}
-
 while test $# -gt 1; do
    key="$1"
    shift
@@ -174,20 +175,20 @@ while test $# -gt 1; do
          ProjectPath=$(ToWindowsPath "$1")
          shift
          ;;
-      --runner)
-         RunnerPath=$(ToWindowsPath "$1")
-         shift
-         ;;
-      --builder)
-         BuilderPath=$(ToWindowsPath "$1")
+      --target)
+         SpecificationName="$1"
          shift
          ;;
       --lv-version)
          LabviewVersion="$1"
          shift
          ;;
-      --target)
-         SpecificationName="$1"
+      --runner)
+         RunnerPath=$(ToWindowsPath "$1")
+         shift
+         ;;
+      --builder)
+         BuilderPath=$(ToWindowsPath "$1")
          shift
          ;;
       *)
@@ -219,7 +220,7 @@ if test -n "${SpecificationName}"; then
    SpecName=$(echo ${SpecificationName} | gawk -F '@' '{print $1}')
    BuildTarget=$(echo ${SpecificationName} | gawk -F '@' '{print $2}')
    $(ValidateTargetWithSpec "${ProjectPath}" "${BuildTarget}" "${SpecName}")
-   BuildProject "${LabviewPath}" "${RunnerPath}" "${BuilderPath}" "${ProjectPath}" "${BuildTarget}" "${SpecName}"
+   CallLabview "${LabviewPath}" "${RunnerPath}" "${BuilderPath}" "${ProjectPath}" "${BuildTarget}" "${SpecName}"
 else
-   BuildProject "${LabviewPath}" "${RunnerPath}" "${BuilderPath}" "${ProjectPath}"
+   CallLabview "${LabviewPath}" "${RunnerPath}" "${BuilderPath}" "${ProjectPath}"
 fi

@@ -118,15 +118,7 @@ function FindRunnableVI
    echo $(ToWindowsPath ${RunnablePath})
 }
 
-function PrintUsage
-{
-   echo >&2 "Usage:"
-   echo >&2 "  VISnipDiagram.sh --vi 'c:\path\to\your.vi' --png 'c:\path\to\an\image.png' [--lv-version VersionYear]"
-   echo >&2
-   echo >&2 "where 'your.vi' must exist, and 'image.png' will be created or overwritten."
-}
-
-function SnipDiagram
+function CallLabview
 {
    local LabviewPath
    local RunnerPath
@@ -138,6 +130,14 @@ function SnipDiagram
 
    echo "${LabviewPath}" "${RunnerPath}" -- $@
    "${LabviewPath}" "${RunnerPath}" -- $@
+}
+
+function PrintUsage
+{
+   echo >&2 "Usage:"
+   echo >&2 "  VISnipDiagram.sh --vi 'c:\path\to\your.vi' --png 'c:\path\to\an\image.png' [--lv-version VersionYear]"
+   echo >&2
+   echo >&2 "where 'your.vi' must exist, and 'image.png' will be created or overwritten."
 }
 
 while test $# -gt 1; do
@@ -199,4 +199,4 @@ else
    LabviewPath=$(DetectLabviewVersion "${ViPath}")
 fi
 
-SnipDiagram "${LabviewPath}" "${RunnerPath}" "${SnipperPath}" "${ViPath}" "${PngPath}"
+CallLabview "${LabviewPath}" "${RunnerPath}" "${SnipperPath}" "${ViPath}" "${PngPath}"
