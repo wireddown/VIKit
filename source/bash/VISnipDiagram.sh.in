@@ -8,6 +8,11 @@ function PrintUsage
    echo >&2 "  VISnipDiagram.sh --vi 'c:\path\to\your.vi' --png 'c:\path\to\an\image.png' [--lv-version VersionYear]"
    echo >&2
    echo >&2 "where 'your.vi' must exist, and 'image.png' will be created or overwritten."
+   echo >&2
+   echo >&2
+   echo >&2 "  VISnipDiagram.sh --vi 'c:\path\to\vi\folder' --png 'c:\path\to\snippet\folder' [--lv-version VersionYear]"
+   echo >&2
+   echo >&2 "where 'c:\path\to\vi\folder' must exist, and 'c:\path\to\snippet\folder' will be created or overwritten."
 }
 
 while test $# -gt 1; do
@@ -43,16 +48,16 @@ done
 
 if test -z "${ViPath}"; then
    PrintUsage
-   ExitWithError "argument '--vi c:\path\to\your.vi' is required."
+   ExitWithError "argument '--vi [ c:\path\to\your.vi | c:\path\to\vi\folder ]' is required."
 fi
 
 if test -z "${PngPath}"; then
    PrintUsage
-   ExitWithError "argument '--png c:\path\to\an\image.png' is required."
+   ExitWithError "argument '--png [ c:\path\to\an\image.png | c:\path\to\snippet\folder ]' is required."
 fi
 
-if ! test -f "${ViPath}"; then
-   ExitWithError "Cannot find VI '${ViPath}'"
+if ! test -f "${ViPath}" -o -d "${ViPath}"; then
+   ExitWithError "Cannot find VI or folder '${ViPath}'"
 fi
 
 if test -z "${RunnerPath}"; then
@@ -60,13 +65,25 @@ if test -z "${RunnerPath}"; then
 fi
 
 if test -z "${SnipperPath}"; then
-   SnipperPath=$(FindRunnableVI VISnipDiagram.vi)
+   if test -f "${ViPath}"; then
+      SnipperPath=$(FindRunnableVI VISnipDiagram.vi)
+      LabviewVersionRequired=false
+   elif test -d "${ViPath}"; then
+      SnipperPath=$(FindRunnableVI VISnipDirectory.vi)
+      LabviewVersionRequired=:
+   else
+      ExitWithError "Cannot find snippet tool for '${ViPath}'"
+   fi
 fi
 
-if test -n "${LabviewVersion}"; then
+if ${LabviewVersionRequired} && test -n "${LabviewVersion}"; then
    LabviewPath=$(FindLabviewExecutable "${LabviewVersion}")
 else
-   LabviewPath=$(DetectLabviewVersion "${ViPath}")
+   if ${LabviewVersionRequired}; then
+      ExitWithError "When snipping folders, argument '--lv-version VersionYear' is required."
+   else
+      LabviewPath=$(DetectLabviewVersion "${ViPath}")
+   fi
 fi
 
 CallLabview "${LabviewPath}" "${RunnerPath}" "${SnipperPath}" "${ViPath}" "${PngPath}"

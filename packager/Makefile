@@ -7,6 +7,7 @@ VIKIT_STAGING_DIR := VIKit
 VIKIT_LIB_DIR := VIKit
 VIKIT_BIN_DIR := bin
 VIDIAGRAM_DIR := VIDiagram
+VIHOST_DIR := VIHost
 VIPROJECT_DIR := VIProject
 VIVENDOR_DIR := VIVendor
 VISNIPPET_DIR := $(VIVENDOR_DIR)/PngSnippet
@@ -23,9 +24,10 @@ LABVIEW_SOURCE_FILES := \
 
 CALLABLE_LABVIEW_FILES := \
    ../source/labview/VIBuildProject.vi \
-   ../source/labview/VIHost/VIHost.lvlib \
-   ../source/labview/VIHost/VHRunVI.vi \
+   ../source/labview/$(VIHOST_DIR)/VIHost.lvlib \
+   ../source/labview/$(VIHOST_DIR)/VHRunVI.vi \
    ../source/labview/VISnipDiagram.vi \
+   ../source/labview/VISnipDirectory.vi \
    ../source/labview/VIQueryBuildSpecs.vi \
 
 CALLABLE_VIDIAGRAM_FILES := \
