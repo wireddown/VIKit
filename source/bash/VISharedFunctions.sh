@@ -48,6 +48,17 @@ function YearForFileVersion
    esac
 }
 
+# Quit if a LabVIEW instance is running for year version in $1
+function AssertCanRunVIs
+{
+   local LabviewYear
+   LabviewYear="$1"
+
+   if $(ps -W | grep -q "LabVIEW ${LabviewYear}"); then
+      ExitWithError "Cannot run VI while LabVIEW ${LabviewYear} is running."
+   fi
+}
+
 # Return the Windows path for LabVIEW.exe with year version in $1
 function FindLabviewExecutable
 {
@@ -63,6 +74,7 @@ function FindLabviewExecutable
       ExitWithError "LabVIEW ${LabviewYear} is not installed."
    fi
 
+   AssertCanRunVIs "${LabviewYear}"
    echo $(ToWindowsPath "${LabviewPath}")
 }
 

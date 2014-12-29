@@ -10,7 +10,7 @@ function PrintUsage
    echo >&2 "where 'your.vi' must exist, and 'image.png' will be created or overwritten."
    echo >&2
    echo >&2
-   echo >&2 "  VISnipDiagram.sh --vi 'c:\path\to\vi\folder' --png 'c:\path\to\snippet\folder' [--lv-version VersionYear]"
+   echo >&2 "  VISnipDiagram.sh --vi 'c:\path\to\vi\folder' --png 'c:\path\to\snippet\folder' --lv-version VersionYear"
    echo >&2
    echo >&2 "where 'c:\path\to\vi\folder' must exist, and 'c:\path\to\snippet\folder' will be created or overwritten."
 }

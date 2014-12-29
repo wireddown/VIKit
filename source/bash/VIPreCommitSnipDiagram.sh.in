@@ -1,0 +1,102 @@
+# VIPreCommitSnipDiagram.sh
+# Copyright 2014 Joe Friedrichsen
+# Licensed under the Apache License, Version 2.0
+
+function PrintUsage
+{
+   echo >&2 "Usage:"
+   echo >&2 "  VIPreCommitSnipDiagram.sh install 'path/to/labview/folder' 'path/to/snippet/folder'"
+   echo >&2 "  VIPreCommitSnipDiagram.sh run 'path/to/labview/folder' 'path/to/snippet/folder'"
+   echo >&2
+}
+
+function Install
+{
+   local PreCommitScript="${GitRepoRoot}/.git/hooks/pre-commit"
+   local InstallTag="BEGIN hook from VIKit::VIPreCommitSnipDiagram.sh"
+   if $(grep -q "${InstallTag}" "${PreCommitScript}" 2>/dev/null); then
+      exit 0;
+   fi
+
+   if ! test -f "${PreCommitScript}"; then
+      echo "#!/bin/bash" > "${PreCommitScript}"
+   fi
+
+   cat >> "${PreCommitScript}" <<-pre-commit-hook
+
+	### ${InstallTag}
+
+	LabViewSourceFolder="${LabviewSourceDir}"
+	LabViewSnippetFolder="${SnippetSourceDir}"
+	VIPreCommitSnipDiagram="\$(which VIPreCommitSnipDiagram.sh)"
+
+	if test -x "\${VIPreCommitSnipDiagram}"; then
+	   "\${VIPreCommitSnipDiagram}" run "\${LabViewSourceFolder}" "\${LabViewSnippetFolder}"
+	fi
+
+	### END hook from VIKit::VIPreCommitSnipDiagram.sh
+
+pre-commit-hook
+}
+
+function Run
+{
+   set +e
+
+   local LabviewSourceRoot="${GitRepoRoot}/${LabviewSourceDir}"
+   local SnippetSourceRoot="${GitRepoRoot}/${SnippetSourceDir}"
+   local ChangedVIs="$(git diff --name-status --cached | grep "\.vi$")"
+   local AllChangedVIs="$(echo "${ChangedVIs}" | awk '{print $2}')"
+   local FirstChangedVI="$(echo "${ChangedVIs}" | grep "^[ACMR]" | head -n1 | awk '{print $2}')"
+
+   if test -n "${AllChangedVIs}"; then
+      echo "Updating VI snippets"
+
+      if test -n "${FirstChangedVI}"; then
+         local LabviewVersion="$(VIQueryVersion $(ToWindowsPath ${GitRepoRoot}/${FirstChangedVI}))"
+         if test $? -ne 0; then ExitWithError "Could not query LabVIEW version for \"${FirstChangedVI}\""; fi
+         local LabviewYear="$(YearForFileVersion ${LabviewVersion})"
+
+         AssertCanRunVIs "${LabviewYear}"
+         git reset HEAD "${SnippetSourceRoot}"
+         git stash -q --keep-index
+         VISnipDiagram.sh --vi "$(ToWindowsPath ${LabviewSourceRoot})" --png "$(ToWindowsPath ${SnippetSourceRoot})" --lv-version "${LabviewYear}"
+         if test $? -ne 0; then ExitWithError "Could not snip LabVIEW diagrams for \"${LabviewSourceRoot}\""; fi
+      fi
+
+      for changed_vi in ${AllChangedVIs}; do
+         local SnippetPng=$(echo "${changed_vi}" | sed s@^${LabviewSourceDir}/@${SnippetSourceDir}/@g | sed s@\.vi\$@\.png@g)
+         local Snippet="${GitRepoRoot}/${SnippetPng}"
+         if test -f "${changed_vi}"; then
+           echo Adding changed "${Snippet}"
+           git add "${Snippet}"
+         else
+           echo Removing deleted "${Snippet}"
+           git rm "${Snippet}"
+         fi
+      done
+
+      local TrackedFiles="$(git ls-files "${GitRepoRoot}")"
+      local UnneededSnippets="$(git diff --name-only | grep "${SnippetSourceDir}/")"
+      for unneeded_snippet in ${UnneededSnippets}; do
+         if $(echo "${TrackedFiles}" | grep -q "${unneeded_snippet}"); then
+            echo Reverting unchanged "${GitRepoRoot}/${unneeded_snippet}"
+            git checkout -- "${GitRepoRoot}/${unneeded_snippet}"
+         fi
+      done
+
+      if test -n "${FirstChangedVI}"; then
+        git stash pop -q
+      fi
+   fi
+}
+
+LabviewSourceDir="$2"
+SnippetSourceDir="$3"
+GitRepoRoot="$(git rev-parse --show-toplevel)"
+
+case "$1" in
+      run)     Run     ;;
+      install) Install ;;
+      *) PrintUsage; ExitWithError "Unknown action \"$1\"" ;;
+esac

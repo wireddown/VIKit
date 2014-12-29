@@ -6,10 +6,12 @@ SCRIPT_HEADER_LINE := 4
 
 VISharedFunctions := VISharedFunctions
 VIBuildProject := VIBuildProject
+VIPreCommitSnipDiagram := VIPreCommitSnipDiagram
 VISnipDiagram := VISnipDiagram
 
 BUILT_SCRIPTS := \
    $(VIBuildProject).sh \
+   $(VIPreCommitSnipDiagram).sh \
    $(VISnipDiagram).sh \
 
 # Makefile rules for VIKit bash scripts
