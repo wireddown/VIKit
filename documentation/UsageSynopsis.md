@@ -33,6 +33,6 @@ $ VIQueryVersion.exe 'C:\path\to\VIKit.lvproj'
 >```
 $ VISnipDiagram.sh --vi 'C:\path\to\VIQueryVersion.vi' --png 'C:\path\to\VIQueryVersion.png'
 >
-$ VISnipDiagram.sh --vi 'C:\path\to\VIQueryVersion.vi' --png 'C:\path\to\VIQueryVersion.png' --lv-version 2014
+$ VISnipDiagram.sh --vi 'C:\path\to\vi\source' --png 'C:\path\to\snippet\mirror' --lv-version 2014
 ```
 
