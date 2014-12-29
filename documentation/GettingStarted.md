@@ -19,7 +19,7 @@ gcc -std=c99 VIQueryVersion.c -o VIQueryVersion.exe -lVIKit -LVIKit
 ```
 $ make install DEST='/path/to/your/bin'
 ```
-* Enable VI auto-snippets-on-git-commit for a repository:
+* Enable VI auto-snippets-on-git-commit for a repository ([like VIKit has](http://github.com/wireddown/VIKit/tree/master/source/lv-snippet)):
 ```
 $ cd /path/to/your/git/repository
 $ VIPreCommitSnipDiagram.sh install "relative/path/to/labview/source" "relative/path/to/snippet/mirror"
